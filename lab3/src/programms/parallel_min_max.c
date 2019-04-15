@@ -13,7 +13,7 @@
 #include <getopt.h>
 
 #include "find_min_max.h"
-#include "utils.h"
+#include "utils.c"
 
 int main(int argc, char **argv) {
   int seed = -1;
@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
   pid_t currentPID;
   struct MinMax minMaxBuff;
   struct timeval start_time;
-
+  gettimeofday(&start_time, NULL);
 
   for (int i = 0; i < pnum; i++) {
     pid_t child_pid = fork();
@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
     wait(NULL);
     active_child_processes -= 1;
   }
-
+  double average_time;
   struct MinMax min_max;
   min_max.min = INT_MAX;
   min_max.max = INT_MIN;
@@ -156,14 +156,18 @@ int main(int argc, char **argv) {
     if (minMaxBuff.max > min_max.max) 
         min_max.max = minMaxBuff.max;
   }
+  
+ // struct timeval finish_time;
+ // gettimeofday(&finish_time, NULL);
 
-
+ //double elapsed_time = (finish_time.tv_sec - start_time.tv_sec) * 1000.0;
+  //average_time += (finish_time.tv_usec - start_time.tv_usec) / 1000.0;
 
   free(array);
 
   printf("Min: %d\n", min_max.min);
   printf("Max: %d\n", min_max.max);
-
+  //printf("AverageTime: %fms\n", average_time);
   fflush(NULL);
   return 0;
 }
